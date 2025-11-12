@@ -1,12 +1,18 @@
 #!ipxe
-###
-### netboot.xyz-custom menu
-###
+######## VzLinux 8 安装菜单 ########
 
-:start
-echo Hello world!
-sleep 10
-goto custom_exit
+:custom_menu
+menu VzLinux Boot Options
+item vzlinux_install Install VzLinux 8 Minimal
+item return Return to Main Menu
+choose --default return --timeout 10000 custom_target && goto ${custom_target}
 
-:custom_exit
-exit 0
+:vzlinux_install
+echo Booting VzLinux 8 Minimal Installer...
+kernel https://repo.virtuozzo.com/vzlinux/8/iso/pxeboot/vmlinuz inst.repo=https://repo.virtuozzo.com/vzlinux/8/iso/vzlinux-8-min.iso
+initrd https://repo.virtuozzo.com/vzlinux/8/iso/pxeboot/initrd.img
+boot
+goto custom_menu
+
+:return
+exit
