@@ -1,18 +1,10 @@
 #!ipxe
-######## VzLinux 8 安装菜单 ########
-
-:custom_menu
-menu VzLinux Boot Options
-item vzlinux_install Install VzLinux 8 Minimal
-item return Return to Main Menu
-choose --default return --timeout 10000 custom_target && goto ${custom_target}
-
-:vzlinux_install
-echo Booting VzLinux 8 Minimal Installer...
-kernel https://repo.virtuozzo.com/vzlinux/8/iso/pxeboot/vmlinuz inst.repo=https://repo.virtuozzo.com/vzlinux/8/iso/vzlinux-8-min.iso
-initrd https://repo.virtuozzo.com/vzlinux/8/iso/pxeboot/initrd.img
-boot
-goto custom_menu
-
-:return
+:start
+echo Downloading and loading ISO into memory...
+initrd https://repo.virtuozzo.com/vzlinux/8.4/iso/vzlinux-8-min.iso || goto failed
+echo ISO loaded. Starting memdisk boot...
+chain http://preseed.panticz.de/ipxe/memdisk iso raw || goto failed
+:failed
+echo Boot failed! Check network, ISO size, or memdisk availability.
+sleep 5
 exit
