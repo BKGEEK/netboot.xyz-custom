@@ -1,10 +1,9 @@
 #!ipxe
 :start
-echo Downloading and loading ISO into memory...
-initrd https://repo.virtuozzo.com/vzlinux/8.4/iso/vzlinux-8-min.iso || goto failed
-echo ISO loaded. Starting memdisk boot...
-chain http://preseed.panticz.de/ipxe/memdisk iso raw || goto failed
+echo Starting SAN boot for ISO...
+set iso_url https://repo.virtuozzo.com/vzlinux/8/iso/vzlinux-8-min.iso  # 替换为你的 ISO URL
+sanboot --no-describe ${iso_url} || goto failed
 :failed
-echo Boot failed! Check network, ISO size, or memdisk availability.
+echo SAN boot failed! Check network or ISO URL.
 sleep 5
 exit
